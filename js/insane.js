@@ -2,15 +2,13 @@
 const Shop = {
   ticks: Number(localStorage.getItem("tt-ticks") || 0),
   owned: JSON.parse(localStorage.getItem("tt-owned") || "{}"),
-  items: [
-    { id: "spray-magma", name: "Magma spray cap", cost: 8, blurb: "Hot orange graffiti." },
-    { id: "spray-gold", name: "Gold cap", cost: 18, blurb: "Tags in molten gold." },
-    { id: "spray-cyan", name: "Cyan drip", cost: 12, blurb: "Icy tags on hot brick." },
+    items: [
     { id: "skin-lava", name: "Lava stage skin", cost: 25, blurb: "Background goes magma." },
     { id: "dragon-snack", name: "Ember snack", cost: 6, blurb: "Feed the dragon. Side treat." },
     { id: "sticker-pack", name: "Sticker bomb", cost: 10, blurb: "Vector stickers slap the wall." },
     { id: "popup-pack", name: "Extra virus pack", cost: 14, blurb: "More fake popups. Worse. Better." },
     { id: "sahur-ring", name: "Sahur ringtone", cost: 20, blurb: "Tung hits when timers end." },
+    { id: "mystery-crate", name: "Mystery crate", cost: 9, blurb: "Unlock a random still-locked wonder." },
     { id: "fake-adblock", name: "Disable popups (fake)", cost: 999, blurb: "It does not work. That is the bit." }
   ],
   boot() { this.render(); },
@@ -29,7 +27,7 @@ const Shop = {
     if (t) t.innerHTML = iconHTML("tick") + " <b>" + this.ticks + "</b>";
     const box = document.getElementById("shopItems"); if (!box) return;
     box.innerHTML = this.items.map((it) => `<div class="shop-item">
-      ${iconHTML(it.id.includes("spray") ? "spray" : it.id.includes("dragon") ? "dragon" : it.id.includes("sahur") ? "tung" : it.id.includes("popup") || it.id.includes("adblock") ? "virus" : it.id.includes("skin") ? "lava" : "sticker")}
+      ${iconHTML(it.id.includes("dragon") ? "dragon" : it.id.includes("sahur") ? "tung" : it.id.includes("popup") || it.id.includes("adblock") ? "virus" : it.id.includes("skin") ? "lava" : it.id.includes("crate") ? "vault" : "sticker")}
       <div><b>${it.name}</b><div class="hud">${it.blurb}</div></div>
       <button ${this.owned[it.id] ? "disabled" : ""} onclick="Shop.buy('${it.id}')">${this.owned[it.id] ? "owned" : it.cost + " ticks"}</button>
     </div>`).join("");
@@ -41,68 +39,21 @@ const Shop = {
     this.owned[id] = true; this.save(); this.render();
     if (id === "dragon-snack") Ember.feed(20);
     if (id === "skin-lava") { document.body.classList.add("lava"); Visuals.mode = "lava"; }
-    if (id === "sticker-pack") Graffiti.stickers();
-    if (id === "popup-pack") Virus.storm(6);
-    if (id === "fake-adblock") { toast("popups intensified"); Virus.storm(8); this.owned[id] = false; this.save(); }
+    if (id === "sticker-pack") Visuals.confetti();
+    if (id === "popup-pack") toast("popups will now arrive in bigger packs. still uninvited.");
+    if (id === "mystery-crate") { Progress.unlockNext(1); this.owned[id] = false; this.save(); this.render(); }
+    if (id === "fake-adblock") { toast("adblock installed (it is a sticker)"); this.owned[id] = false; this.save(); }
     Dopamine.combo("+OWNED", "#ffd23a");
     Badge.earn("shop");
   }
 };
 
 const Graffiti = {
-  on: false, color: "#ff4b1f", drawing: false,
-  boot() {
-    const c = document.getElementById("graffiti");
-    this.ctx = c.getContext("2d");
-    const resize = () => { const img = this.ctx.getImageData(0,0,c.width||1,c.height||1); c.width = innerWidth; c.height = innerHeight; try { this.ctx.putImageData(img,0,0); } catch (e) {} };
-    resize(); addEventListener("resize", resize);
-    c.addEventListener("mousedown", (e) => { this.drawing = true; this.paint(e); });
-    c.addEventListener("mousemove", (e) => this.drawing && this.paint(e));
-    addEventListener("mouseup", () => this.drawing = false);
-    addEventListener("keydown", (e) => { if (e.key === "Escape" && this.on) this.toggle(false); });
-  },
-  toggle(force) {
-    this.on = force == null ? !this.on : force;
-    document.body.classList.toggle("spray-on", this.on);
-    toast(this.on ? "Spray wall live — drag to tag" : "Cap holstered");
-    if (this.on && Shop.owned["spray-gold"]) this.color = "#ffd23a";
-    else if (this.on && Shop.owned["spray-cyan"]) this.color = "#2ee6ff";
-    else this.color = "#ff4b1f";
-  },
-  paint(e) {
-    const c = this.ctx;
-    c.fillStyle = this.color;
-    c.globalAlpha = 0.55;
-    for (let i = 0; i < 8; i++) {
-      c.beginPath();
-      c.arc(e.clientX + (Math.random()-0.5)*14, e.clientY + (Math.random()-0.5)*14, 2+Math.random()*3, 0, 6.28);
-      c.fill();
-    }
-    c.globalAlpha = 1;
-    if (Math.random() < 0.04) this.drip(e.clientX, e.clientY);
-  },
-  drip(x, y) {
-    const c = this.ctx;
-    c.strokeStyle = this.color; c.lineWidth = 3; c.beginPath(); c.moveTo(x,y); c.lineTo(x+(Math.random()-0.5)*6, y+20+Math.random()*40); c.stroke();
-  },
-  tag(text, x, y) {
-    const c = this.ctx;
-    c.save();
-    c.translate(x, y); c.rotate((Math.random()-0.5)*0.3);
-    c.font = "900 28px Trebuchet MS";
-    c.strokeStyle = "#1c0b08"; c.lineWidth = 6; c.strokeText(text, 0, 0);
-    c.fillStyle = this.color; c.fillText(text, 0, 0);
-    c.restore();
-  },
   postPopup(title) {
-    this.tag(title.slice(0, 18).toUpperCase(), 40+Math.random()*(innerWidth-120), 80+Math.random()*(innerHeight-120));
     Dopamine.combo("+POSTED", "#ff3ec8");
-    Shop.add(1);
-  },
-  stickers() {
-    for (let i = 0; i < 8; i++) {
-      this.tag(["TUNG","5 MIN","EMBER","CHAOS","TICK"][i%5], Math.random()*innerWidth, Math.random()*innerHeight);
-    }
+    Shop.add(2);
+    Visuals.confetti();
+    toast("Posted: " + title);
   }
 };
 
@@ -113,7 +64,7 @@ const Virus = {
     { title: "URGENT SUNDIAL", body: "Hot singles in your timezone want to count down." },
     { title: "ERROR 5:00", body: "Time could not be found. Did you check behind the couch?" },
     { title: "SAHUR INSTALLER", body: "Tung Tung Tung Sahur wants to use your speakers." },
-    { title: "GRAFFITI LICENSE", body: "Your spray cap expired in 1998. POST to renew." },
+    { title: "POPUP LICENSE", body: "Your chaos license expired in 1998. POST to renew." },
     { title: "DRAGON TAX", body: "Ember filed a hunger report. Feed immediately." },
     { title: "MUSEUM BREACH", body: "Feature #99 escaped. It is rolling toward you." },
     { title: "LOFI OVERFLOW", body: "Too much vinyl crackle. Buffering rain." },
@@ -185,7 +136,7 @@ const Tung = {
         if (Number(b.dataset.i) === need) { score++; AudioBus.tungHit(need===3); Dopamine.combo(c.hits[need], "#ffd23a"); }
         else AudioBus.drum("crash");
         i++; document.getElementById("tungHud").textContent = "combo "+score;
-        if (score >= 8) { Shop.add(8); Graffiti.tag("SAHUR", innerWidth/2, innerHeight/2); Visuals.confetti(); this.end(); toast("chant complete"); }
+        if (score >= 8) { Shop.add(8); Visuals.confetti(); this.end(); toast("chant complete"); }
       };
     });
   },
@@ -193,8 +144,8 @@ const Tung = {
 };
 
 const Brainrot = {
-  on: true,
-  boot() { setInterval(() => { if (this.on && Math.random() < 0.18) this.ambush(); }, 22000); },
+  on: false,
+  boot() {},
   toggle() { this.on = !this.on; toast("Brainrot ambush " + (this.on ? "armed" : "asleep")); },
   ambush() {
     const roll = Math.random();

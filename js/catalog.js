@@ -43,10 +43,10 @@ window.CHAOS_FEATURES = [
   { id: 39, cat: "visual",  icon: "glitch", name: "Glitch Hex", blurb: "RGB split, tear lines, cursed compression artifacts.", action: "glitchHex" },
   { id: 40, cat: "visual",  icon: "crt", name: "CRT Haunting", blurb: "Scanlines, curvature, and a ghost in the shell of 1987.", action: "crtHaunting" },
   { id: 41, cat: "visual",  icon: "firefly", name: "Firefly Garden", blurb: "Bioluminescent bugs orbit the timer like tiny lanterns.", action: "fireflyGarden" },
-  { id: 42, cat: "visual",  icon: "spray", name: "Graffiti Spray Wall", blurb: "Spray-paint the stage. Tags, drips, and a gold cap if you shop.", action: "graffitiWall" },
+  { id: 42, cat: "visual",  icon: "star", name: "Lucky Encounter", blurb: "Fate bumps into you. You cannot schedule it.", action: "luckyEncounter" },
   { id: 43, cat: "visual",  icon: "flipg", name: "Gravity Flip", blurb: "UI elements fall upward because physics filed for divorce.", action: "gravityFlip" },
   { id: 44, cat: "visual",  icon: "dvd", name: "DVD Ghost Logo", blurb: "A bouncing logo hunts the perfect corner forever.", action: "dvdGhost" },
-  { id: 45, cat: "visual",  icon: "virus", name: "Virus Popup Storm", blurb: "Fake malware windows you must close or POST onto the graffiti wall.", action: "virusStorm" },
+  { id: 45, cat: "visual",  icon: "virus", name: "Virus Popup Storm", blurb: "Fake malware windows crash in uninvited. You cannot open them yourself.", action: "virusStorm" },
 
   { id: 46, cat: "game",    icon: "snake", name: "Neon Snake", blurb: "Eat glowing pellets. Do not become a pretzel.", action: "gameSnake" },
   { id: 47, cat: "game",    icon: "brick", name: "Brick Drop", blurb: "Tetris-lite: stack tetrominoes before the ceiling judges you.", action: "gameBrickDrop" },
@@ -98,11 +98,11 @@ window.CHAOS_FEATURES = [
   { id: 91, cat: "insane",  icon: "dragon", name: "Ember the Timer Dragon", blurb: "A virtual dragon pet: feed, play, watch it snooze on the clock.", action: "emberDragon" },
   { id: 92, cat: "insane",  icon: "badge", name: "Badge Constellation", blurb: "Unlock achievement badges for chaos, music, and high scores.", action: "badgeConstellation" },
   { id: 93, cat: "insane",  icon: "streak", name: "Daily Streak Flame", blurb: "Open TinyTimer on consecutive days; the flame grows vain.", action: "dailyStreak" },
-  { id: 94, cat: "insane",  icon: "boss", name: "Boss Fight: Alarmoth", blurb: "When time hits zero, fight the moth of alarms or be beeped forever.", action: "bossAlarmoth" },
+  { id: 94, cat: "insane",  icon: "boss", name: "Boss Fight: Alarmoth", blurb: "When it feels like it, the moth of alarms crashes the party. Not on demand.", action: "bossAlarmoth" },
   { id: 95, cat: "insane",  icon: "konami", name: "Konami Warp Gate", blurb: "Up Up Down Down Left Right Left Right B A opens a secret rainbow song.", action: "konamiGate" },
   { id: 96, cat: "insane",  icon: "shop", name: "Side Street Shop", blurb: "A tiny kiosk on the edge of the stage. Spend ticks. Never the main event.", action: "sideShop" },
-  { id: 97, cat: "insane",  icon: "tung", name: "Tung Tung Tung Sahur Call", blurb: "He can call you. Wood-bat rhythm. Answer or decline. Brainrot inbound.", action: "tungCall" },
-  { id: 98, cat: "insane",  icon: "brain", name: "Brainrot Ambush", blurb: "Random mini-games and meme callers jump the timer like pop-up ads.", action: "brainrotAmbush" },
+  { id: 97, cat: "insane",  icon: "tung", name: "Tung Tung Tung Sahur Call", blurb: "He calls you. You do not call him. Wood-bat rhythm. Answer or decline.", action: "tungCall" },
+  { id: 98, cat: "insane",  icon: "brain", name: "Brainrot Ambush", blurb: "Mini-games and meme callers jump you. There is no queue button.", action: "brainrotAmbush" },
   { id: 99, cat: "insane",  icon: "chaos", name: "Chaos Dice", blurb: "Roll to activate a random other feature. No take-backs.", action: "chaosDice" },
   { id: 100,cat: "insane",  icon: "museum", name: "Museum of 100 Wonders", blurb: "A searchable gallery of every feature, with launch buttons.", action: "museumWonders" }
 ];
