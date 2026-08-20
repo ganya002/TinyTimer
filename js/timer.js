@@ -262,7 +262,6 @@ const Engine = {
     if (hh === this.alarm && now.getSeconds() === 0) {
       Studio.playMelody();
       Chronos.speak("Alarm. Rise, mortal.");
-      Virus.storm(3);
       this.alarm = null;
     }
   },

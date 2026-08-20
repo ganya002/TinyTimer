@@ -419,3 +419,40 @@ body.waking .brand h1 {
 }
 
 body:not(.has-side) .layout { grid-template-columns: 1fr; }
+
+.feat.is-pest { cursor: default; opacity: 0.92; }
+#popupLayer .intrude { pointer-events: auto; position: absolute; z-index: 93; }
+.intrude.center-card {
+  left: 50%; top: 45%; transform: translate(-50%, -50%);
+  background: #1c0b08; border: 3px solid var(--gold); border-radius: 18px;
+  padding: 16px; width: min(380px, 92vw); color: var(--ink); box-shadow: var(--shadow);
+}
+.intrude.full { inset: 0; }
+.consent-box, .rate-box, .win-update, .zoom, .cap, .twofa, .still, .mail, .batt, .call-lite { }
+.sms {
+  background: #111827; border: 2px solid var(--cyan); border-radius: 16px; padding: 12px;
+  width: min(280px, 80vw); box-shadow: var(--shadow);
+}
+.sms-from { font-size: 0.75rem; letter-spacing: 0.12em; color: var(--gold); display: flex; gap: 6px; align-items: center; }
+.sys-note {
+  background: #0d1a12; border: 1px solid var(--lime); border-radius: 12px; padding: 10px 14px;
+  width: min(260px, 80vw); display: flex; gap: 8px; align-items: center;
+}
+.clippy { background: #fff8e0; color: #1c0b08; border: 3px solid #1c0b08; border-radius: 18px; padding: 12px; width: 240px; }
+.bsod { background: #0078d7; color: #fff; inset: 0; position: absolute; padding: 8vh 8vw; font-size: 1.2rem; }
+.bsod div:first-child { font-size: 4rem; margin-bottom: 12px; }
+.bsod button { margin-top: 20px; background: #fff; color: #0078d7; }
+.dl { background: #12122a; border: 2px solid var(--stroke); border-radius: 12px; padding: 12px; width: min(280px, 80vw); }
+.dl-bar { height: 10px; background: #222; border-radius: 99px; overflow: hidden; margin: 8px 0; }
+.dl-bar span { display: block; height: 100%; width: 1%; background: var(--lime); }
+.cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
+.cap-cell { height: 64px; border-radius: 8px; }
+.cap-cell.on { outline: 3px solid var(--gold); }
+.ticker-wrap { left: 0; right: 0; bottom: 0; top: auto; overflow: hidden; }
+.ticker {
+  background: #9b0000; color: #fff; padding: 8px 0; white-space: nowrap;
+  animation: tickslide 12s linear infinite; font-weight: 800; letter-spacing: 0.08em;
+}
+@keyframes tickslide { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+.meteor { background: #3a0a00; color: var(--gold); padding: 10px; text-align: center; font-weight: 800; }
+.mail { background: #f4f1ff; color: #111; border: 2px solid #333; padding: 14px; width: min(360px, 92vw); }

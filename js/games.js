@@ -408,7 +408,7 @@ Games.gameSlots = function() {
       el.querySelector("#reels").innerHTML=r.map((s)=>iconHTML(s,"lg")).join("");
       const win=r[0]===r[1]&&r[1]===r[2];
       el.querySelector("#slout").textContent=win?"JACKPOT":"spin again";
-      if (win) { Shop.add(12); Virus.storm(2); Visuals.confetti(); }
+      if (win) { Shop.add(12); Visuals.confetti(); }
     };
     el.querySelector("#spin").onclick=spin;
   }};

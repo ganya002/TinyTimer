@@ -72,22 +72,19 @@ const Progress = {
   }
 };
 
+window.RANDOM_ONLY = new Set(["virusStorm", "tungCall", "brainrotAmbush", "bossAlarmoth", "luckyEncounter"]);
+
 const Events = {
   started: false,
   last: 0,
   boot() {
-    setInterval(() => this.pulse(), 3500);
-    setTimeout(() => {
-      if (!this.started && Progress.count() === 0) {
-        /* still bland until they press Start */
-      }
-    }, 1000);
+    setInterval(() => this.pulse(), 3200);
   },
   onStart() {
     AudioBus.resume();
     if (!this.started) {
       this.started = true;
-      setTimeout(() => this.fire({ guaranteed: true, bland: Progress.count() === 0 }), 2200);
+      setTimeout(() => this.fire({ guaranteed: true }), 2200);
     }
   },
   onFinish() {
@@ -96,9 +93,9 @@ const Events = {
   },
   pulse() {
     if (!Engine.running && Progress.count() === 0) return;
-    if (!Engine.running && Math.random() > 0.12) return;
-    if (Engine.running && Math.random() > 0.28) return;
-    if (performance.now() - this.last < 8000 && Progress.count() > 0) return;
+    if (!Engine.running && Math.random() > 0.14) return;
+    if (Engine.running && Math.random() > 0.32) return;
+    if (performance.now() - this.last < 7000 && Progress.count() > 0) return;
     this.fire();
   },
   fire(opts) {
@@ -111,8 +108,6 @@ const Events = {
       this.banner(Progress.count() < 4
         ? (names ? ("Something shifted. " + names + ".") : "The timer noticed you.")
         : ("Random event · unlocked " + names));
-    } else {
-      this.banner("Every wonder is already loose.");
     }
     this.spectacle();
   },
@@ -127,18 +122,21 @@ const Events = {
   spectacle() {
     const n = Progress.count();
     if (n === 0) return;
-    const pool = [];
-    if (Progress.has("confettiCannon") || n >= 8) pool.push(() => Visuals.confetti());
-    if (Progress.has("novaBurst")) pool.push(() => Visuals.nova());
-    if (Progress.has("earthquakeShake") || n >= 3) pool.push(() => Visuals.shake());
-    if (Progress.has("virusStorm") && n >= 6) pool.push(() => Virus.storm(2));
-    if (Progress.has("tungCall") && n >= 10) pool.push(() => Tung.call());
-    if (Progress.has("brainrotAmbush") && n >= 12) pool.push(() => Brainrot.ambush());
-    if (Progress.has("fortuneCookie")) pool.push(() => Fortune.crack());
-    if (Progress.has("discoInferno") && Math.random() < 0.2) pool.push(() => Visuals.disco());
-    if (Progress.has("bossAlarmoth") && n >= 20 && Math.random() < 0.15) pool.push(() => Boss.start());
-    if (!pool.length) return;
-    if (Math.random() < (n < 6 ? 0.35 : 0.7)) pool[(Math.random() * pool.length) | 0]();
+    const pests = [];
+    const extra = Shop.owned && Shop.owned["popup-pack"] ? 2 : 0;
+    if (Progress.has("virusStorm")) pests.push(() => Virus.storm(2 + extra));
+    if (Progress.has("tungCall")) pests.push(() => Tung.call());
+    if (Progress.has("brainrotAmbush")) pests.push(() => Brainrot.ambush());
+    if (Progress.has("bossAlarmoth")) pests.push(() => Boss.start());
+    if (window.Intrusions) Intrusions.unlocked().forEach((fn) => pests.push(fn));
+    const flavor = [];
+    if (Progress.has("confettiCannon") || n >= 8) flavor.push(() => Visuals.confetti());
+    if (Progress.has("novaBurst")) flavor.push(() => Visuals.nova());
+    if (Progress.has("earthquakeShake") || n >= 3) flavor.push(() => Visuals.shake());
+    if (Progress.has("discoInferno") && Math.random() < 0.2) flavor.push(() => Visuals.disco());
+    const roll = Math.random();
+    if (pests.length && roll < 0.62) pests[(Math.random() * pests.length) | 0]();
+    else if (flavor.length && roll < 0.88) flavor[(Math.random() * flavor.length) | 0]();
   }
 };
 

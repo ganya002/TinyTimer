@@ -24,7 +24,7 @@ const ACTIONS = {
   dateHorizon() { document.getElementById("dateIn").focus(); },
   milliMicroscope() { Engine.toggleMillis(); },
   lapChronicle() { Engine.lap(); },
-  keyboardNinja() { toast("Space start/pause · R reset · L lap · V virus · T sahur · N chaos"); },
+  keyboardNinja() { toast("Space start/pause · R reset · L lap · N chaos"); },
   memoryVault() { Engine.preset(Engine.lastVault, "vault recall"); },
   flipClock() { Engine.setDisplay("flip"); },
   analogAura() { Engine.setDisplay("analog"); },
@@ -52,10 +52,10 @@ const ACTIONS = {
   glitchHex() { Visuals.glitch(); },
   crtHaunting() { Visuals.crt(); },
   fireflyGarden() { Visuals.fliesOn(); },
-  luckyEncounter() { Events.fire({ guaranteed: true }); },
+  luckyEncounter() { toast("Lucky encounters hit you. You do not hit them."); },
   gravityFlip() { Visuals.gravity(); },
   dvdGhost() { Visuals.dvdOn(); },
-  virusStorm() { Virus.storm(5); },
+  virusStorm() { toast("Popups show up when they want."); },
   gameSnake() { Arcade.open("gameSnake"); },
   gameBrickDrop() { Arcade.open("gameBrickDrop"); },
   gameFlappy() { Arcade.open("gameFlappy"); },
@@ -104,18 +104,18 @@ const ACTIONS = {
   emberDragon() { Ember.feed(8); Ember.play(); },
   badgeConstellation() { Badge.show(); },
   dailyStreak() { toast("Streak flame: " + Streak.n + " day(s)"); },
-  bossAlarmoth() { Boss.start(); },
+  bossAlarmoth() { toast("Alarmoth crashes the party on its own."); },
   konamiGate() { toast("Enter Up Up Down Down Left Right Left Right B A"); },
   sideShop() { Shop.toggle(); },
-  tungCall() { Tung.call(Tung.callers[0]); },
-  brainrotAmbush() { Brainrot.toggle(); Brainrot.ambush(); },
+  tungCall() { toast("Sahur calls you. You do not call Sahur."); },
+  brainrotAmbush() { toast("Ambushes jump you. You do not queue them."); },
   chaosDice() { Chaos.dice(); },
   museumWonders() { document.getElementById("museum").scrollIntoView({ behavior:"smooth" }); }
 };
 
 const Chaos = {
   dice() {
-    const pool = CHAOS_FEATURES.filter((f) => f.action !== "chaosDice" && Progress.has(f.action));
+    const pool = CHAOS_FEATURES.filter((f) => f.action !== "chaosDice" && Progress.has(f.action) && !RANDOM_ONLY.has(f.action));
     if (!pool.length) { toast("nothing unlocked to roll yet"); return; }
     const f = pool[(Math.random()*pool.length)|0];
     toast("Chaos dice: " + f.name);
@@ -166,9 +166,7 @@ function buildChrome() {
     <button class="ghost locked-ui" id="btnTwin" data-unlock="twinTimerDuel">${iconHTML("swords")} Twin Duel</button>
     <button class="lime locked-ui" id="btnChaos" data-unlock="chaosDice">${iconHTML("chaos")} Chaos Dice</button>
     <button class="mag locked-ui" id="btnArcade" data-unlock-cat="game">${iconHTML("boss")} Arcade</button>
-    <button class="gold locked-ui" id="btnStudio" data-unlock-cat="music">${iconHTML("mic")} Studio</button>
-    <button class="ghost locked-ui" id="btnVirus" data-unlock="virusStorm">${iconHTML("virus")} Popups</button>
-    <button class="ghost locked-ui" id="btnTung" data-unlock="tungCall">${iconHTML("tung")} Sahur</button>`;
+    <button class="gold locked-ui" id="btnStudio" data-unlock-cat="music">${iconHTML("mic")} Studio</button>`;
 
   document.getElementById("worldTitle").innerHTML = iconHTML("globe") + " World Clock Carousel";
   document.getElementById("alarmTitle").innerHTML = iconHTML("alarm") + " Alarm Sundial";
@@ -221,8 +219,6 @@ function bindUi() {
   document.getElementById("btnChaos").onclick = () => Chaos.dice();
   document.getElementById("btnArcade").onclick = () => Arcade.openPicker();
   document.getElementById("btnStudio").onclick = () => Studio.open();
-  document.getElementById("btnVirus").onclick = () => Virus.storm(5);
-  document.getElementById("btnTung").onclick = () => Tung.call(Tung.callers[0]);
   document.getElementById("btnStartB").onclick = () => Engine.startB();
   document.getElementById("btnResetB").onclick = () => Engine.resetB();
   document.getElementById("btnArm").onclick = () => Engine.setAlarm();
@@ -260,12 +256,13 @@ function buildMuseum() {
     document.getElementById("museumCount").textContent = open + " / " + list.length + " wonders unlocked in this filter";
     document.getElementById("featureGrid").innerHTML = list.map((f) => {
       const on = Progress.has(f.action);
-      return `<button class="feat ${on ? "" : "is-locked"}" data-action="${f.action}" ${on ? "" : "disabled"}>
+      const pest = window.RANDOM_ONLY && RANDOM_ONLY.has(f.action);
+      return `<button class="feat ${on ? "" : "is-locked"} ${pest && on ? "is-pest" : ""}" data-action="${f.action}" ${on && !pest ? "" : "disabled"}>
         ${on ? iconHTML(f.icon) : iconHTML("vault")}
         <div class="id">#${String(f.id).padStart(3,"0")}</div>
         <h3>${on ? f.name : "Locked"}</h3>
-        <p>${on ? f.blurb : "Keep playing. Random events peel this open."}</p>
-        <span class="cat">${f.cat}</span>
+        <p>${on ? (pest ? "Shows up on its own. You cannot start it." : f.blurb) : "Keep playing. Random events peel this open."}</p>
+        <span class="cat">${pest && on ? "random" : f.cat}</span>
       </button>`;
     }).join("");
   }
@@ -292,9 +289,6 @@ function keys() {
     }
     if (e.code === "Space") { e.preventDefault(); if (Progress.has("pauseResume")) Engine.pause(); else Engine.start(); }
     if (e.key === "r" || e.key === "R") Engine.reset();
-    if ((e.key === "l" || e.key === "L") && Progress.has("lapChronicle")) Engine.lap();
-    if ((e.key === "v" || e.key === "V") && Progress.has("virusStorm")) Virus.storm(3);
-    if ((e.key === "t" || e.key === "T") && Progress.has("tungCall")) Tung.call(Tung.callers[0]);
     if ((e.key === "n" || e.key === "N") && Progress.has("chaosDice")) Chaos.dice();
   });
 }

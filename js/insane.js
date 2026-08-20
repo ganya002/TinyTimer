@@ -40,9 +40,9 @@ const Shop = {
     if (id === "dragon-snack") Ember.feed(20);
     if (id === "skin-lava") { document.body.classList.add("lava"); Visuals.mode = "lava"; }
     if (id === "sticker-pack") Visuals.confetti();
-    if (id === "popup-pack") Virus.storm(6);
+    if (id === "popup-pack") toast("popups will now arrive in bigger packs. still uninvited.");
     if (id === "mystery-crate") { Progress.unlockNext(1); this.owned[id] = false; this.save(); this.render(); }
-    if (id === "fake-adblock") { toast("popups intensified"); Virus.storm(8); this.owned[id] = false; this.save(); }
+    if (id === "fake-adblock") { toast("adblock installed (it is a sticker)"); this.owned[id] = false; this.save(); }
     Dopamine.combo("+OWNED", "#ffd23a");
     Badge.earn("shop");
   }
