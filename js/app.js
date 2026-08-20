@@ -136,12 +136,11 @@ function launch(action) {
 }
 
 function buildChrome() {
-  document.getElementById("brandMark").innerHTML = iconHTML("flame", "lg");
-  document.getElementById("shopBtn").innerHTML = iconHTML("shop") + " Shop";
-  document.getElementById("shopClose").innerHTML = iconHTML("close") + " Close";
-  document.getElementById("shopHead").innerHTML = iconHTML("shop") + " Side Street Shop";
-  document.getElementById("btnAcceptCall").innerHTML = iconHTML("accept") + " Accept";
-  document.getElementById("btnDeclineCall").innerHTML = iconHTML("decline") + " Decline";
+  document.getElementById("shopBtn").textContent = "Shop";
+  document.getElementById("shopClose").textContent = "Close";
+  document.getElementById("shopHead").textContent = "Shop";
+  document.getElementById("btnAcceptCall").textContent = "Accept";
+  document.getElementById("btnDeclineCall").textContent = "Decline";
 
   document.getElementById("mainControls").innerHTML = `
     <button id="btnStart">Start</button>
@@ -157,26 +156,26 @@ function buildChrome() {
     [25*60,"pomodoro","tomato","25","pomodoroTrinity"],[5*60,"short break","tea","5","pomodoroTrinity"],[15*60,"long break","flame","15","pomodoroTrinity"],
     [2*60,"green tea","tea","green","teaCeremony"],[4*60,"black tea","tea","black","teaCeremony"],[3*60,"oolong","tea","oolong","teaCeremony"],
     [5*60,"herbal","tea","herbal","teaCeremony"],[6*60,"soft egg","egg","soft","eggLab"],[8*60,"jammy egg","egg","jammy","eggLab"],[12*60,"hard egg","egg","hard","eggLab"]
-  ].map(([sec,name,ic,label,need]) => `<button class="ghost locked-ui" data-unlock="${need}" data-sec="${sec}" data-name="${name}">${iconHTML(ic)} ${label}</button>`).join("");
+  ].map(([sec,name,ic,label,need]) => `<button class="ghost locked-ui" data-unlock="${need}" data-sec="${sec}" data-name="${name}">${label}</button>`).join("");
 
   document.getElementById("modeRow").innerHTML = `
-    <button class="ghost locked-ui" id="btnSw" data-unlock="stopwatchAscent">${iconHTML("stopwatch")} Stopwatch</button>
-    <button class="ghost locked-ui" id="btnTab" data-unlock="tabataInferno">${iconHTML("flame")} Tabata</button>
-    <button class="ghost locked-ui" id="btnMs" data-unlock="milliMicroscope">${iconHTML("scope")} ms</button>
-    <button class="ghost locked-ui" id="btnTwin" data-unlock="twinTimerDuel">${iconHTML("swords")} Twin Duel</button>
-    <button class="lime locked-ui" id="btnChaos" data-unlock="chaosDice">${iconHTML("chaos")} Chaos Dice</button>
-    <button class="mag locked-ui" id="btnArcade" data-unlock-cat="game">${iconHTML("boss")} Arcade</button>
-    <button class="gold locked-ui" id="btnStudio" data-unlock-cat="music">${iconHTML("mic")} Studio</button>`;
+    <button class="ghost locked-ui" id="btnSw" data-unlock="stopwatchAscent">Stopwatch</button>
+    <button class="ghost locked-ui" id="btnTab" data-unlock="tabataInferno">Tabata</button>
+    <button class="ghost locked-ui" id="btnMs" data-unlock="milliMicroscope">ms</button>
+    <button class="ghost locked-ui" id="btnTwin" data-unlock="twinTimerDuel">Twin</button>
+    <button class="ghost locked-ui" id="btnChaos" data-unlock="chaosDice">Dice</button>
+    <button class="ghost locked-ui" id="btnArcade" data-unlock-cat="game">Arcade</button>
+    <button class="ghost locked-ui" id="btnStudio" data-unlock-cat="music">Studio</button>`;
 
-  document.getElementById("worldTitle").innerHTML = iconHTML("globe") + " World Clock Carousel";
-  document.getElementById("alarmTitle").innerHTML = iconHTML("alarm") + " Alarm Sundial";
-  document.getElementById("dateTitle").innerHTML = iconHTML("calendar") + " Date Horizon";
-  document.getElementById("lapTitle").innerHTML = iconHTML("flag") + " Lap Chronicle";
-  document.getElementById("arcadeTitle").innerHTML = iconHTML("boss") + " Arcade Cabinet";
-  document.getElementById("museumTitle").innerHTML = iconHTML("museum") + " Museum of 100 Wonders";
+  document.getElementById("worldTitle").textContent = "World clocks";
+  document.getElementById("alarmTitle").textContent = "Alarm";
+  document.getElementById("dateTitle").textContent = "Date";
+  document.getElementById("lapTitle").textContent = "Laps";
+  document.getElementById("arcadeTitle").textContent = "Arcade";
+  document.getElementById("museumTitle").textContent = "Features";
 
   document.getElementById("studioHead").innerHTML = `
-    ${iconHTML("mic")}<h2 class="sec-title">Chronos Studio</h2>
+    <h2 class="sec-title">Studio</h2>
     <button data-song="tick">Tick Tock Forever</button>
     <button data-song="five">Five More Minutes</button>
     <button class="mag" data-song="pomo">Pomodoro Power</button>
@@ -252,8 +251,7 @@ function buildMuseum() {
   let cat = "all", q = "";
   function draw() {
     const list = CHAOS_FEATURES.filter((f) => (cat==="all"||f.cat===cat) && (f.name+" "+f.blurb).toLowerCase().includes(q));
-    const open = list.filter((f) => Progress.has(f.action)).length;
-    document.getElementById("museumCount").textContent = open + " / " + list.length + " wonders unlocked in this filter";
+    document.getElementById("museumCount").textContent = "";
     document.getElementById("featureGrid").innerHTML = list.map((f) => {
       const on = Progress.has(f.action);
       const pest = window.RANDOM_ONLY && RANDOM_ONLY.has(f.action);

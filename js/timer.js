@@ -151,11 +151,14 @@ const Engine = {
     document.getElementById("btnStart").textContent = "Running";
     const step = this.millis ? 50 : 1000;
     const delta = this.millis ? 0.05 : 1;
+    this._drip = 0;
     this.interval = setInterval(() => {
       if (this.stopwatch) this.time += delta;
       else this.time -= delta;
       if (this.tabata) this.tabataTick();
       this.render();
+      this._drip += delta;
+      if (this._drip >= 3) { this._drip = 0; if (window.Events) Events.drip(); }
       if (!this.stopwatch && this.time <= 0) this.finish();
     }, step);
     if (Progress && Progress.count()) toast("Clock is live");
