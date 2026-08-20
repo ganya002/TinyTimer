@@ -10,7 +10,7 @@ Open `index.html` in a browser. No build step. No emoji. Every icon is original 
 
 - **0 unlocked** — original look. Navy background, giant 05:00, Start / Reset.
 - **Start the timer** — after a couple of seconds the first random event peels something open (Pause, a preset, a visual, a game…).
-- **Keep playing** — events keep rolling. The fire-street skin, arcade, studio, shop, popups, and Sahur calls only appear after you unlock them.
+- **Keep playing** — events keep rolling. Sahur calls, virus windows, cookie banners, fake updates, captchas, news tickers, and more jump you. There is no button to start them.
 - Progress is saved in the browser (`tt-unlocks`). A new visitor always starts empty.
 
 ## Side pieces (not the homepage)
