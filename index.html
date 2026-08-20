@@ -1,24 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TinyTimer</title>
-    <style>
-        body { font-family: system-ui; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #1a1a2e; color: white; }
-        #timer { font-size: 5rem; }
-        button { font-size: 1.5rem; padding: 10px 30px; margin: 5px; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TinyTimer Chaos Edition — 100 Wonders</title>
+  <link rel="stylesheet" href="css/chaos.css" />
 </head>
-<body>
-    <div>
-        <div id="timer">05:00</div>
-        <button onclick="start()">Start</button>
-        <button onclick="reset()">Reset</button>
+<body class="fire-theme">
+  <canvas id="fx"></canvas>
+  <canvas id="graffiti"></canvas>
+  <canvas id="fx-front"></canvas>
+  <div id="dvd">TINYTIMER</div>
+  <div id="popupLayer"></div>
+
+  <div id="app">
+    <header class="top">
+      <div class="brand">
+        <span id="brandMark"></span>
+        <div>
+          <h1>TinyTimer Chaos Edition</h1>
+          <small>100 wonders · fire street · vector stickers only</small>
+        </div>
+      </div>
+      <div class="header-tools">
+        <button class="ghost icon-btn" id="shopBtn" title="Side Street Shop">Shop</button>
+        <div class="pet" id="petChip" title="Ember the Timer Dragon">
+          <span class="dragon" id="dragonFace"></span>
+          <div>
+            <div><b id="dragonName">Ember</b> · <span id="dragonMood">hatching</span></div>
+            <div class="stats">
+              <span id="loveStat"></span>
+              <span id="streakStat"></span>
+              <span id="badgeStat"></span>
+              <span id="tickStat"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section id="stage">
+        <svg id="halo" viewBox="0 0 120 120" class="hidden">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#ffffff22" stroke-width="8"/>
+          <circle id="haloArc" cx="60" cy="60" r="52" fill="none" stroke="#ff4b1f" stroke-width="8"
+            stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="326.7" stroke-dashoffset="0"/>
+        </svg>
+        <div class="time-wrap">
+          <div id="flipRow" class="flip-row hidden">
+            <div class="flip" id="flipM1">0</div><div class="flip" id="flipM2">5</div>
+            <div class="flip" id="flipS1">0</div><div class="flip" id="flipS2">0</div>
+          </div>
+          <div id="binaryBox" class="binary hidden"></div>
+          <div id="hourglass" class="hourglass hidden">
+            <div class="bulb"><div class="sand" id="sandTop"></div></div>
+            <div class="bulb bottom"><div class="sand" id="sandBot"></div></div>
+          </div>
+          <div id="cubeScene" class="cube-scene hidden">
+            <div class="cube" id="cube">
+              <span class="f1" id="cube1">05:00</span>
+              <span class="f2" id="cube2">05:00</span>
+              <span class="f3" id="cube3">05:00</span>
+              <span class="f4" id="cube4">05:00</span>
+            </div>
+          </div>
+          <div id="analogFace" class="analog-face hidden"></div>
+          <div id="stickerTime" class="sticker-time hidden"></div>
+          <div id="timer" class="time-readout">05:00</div>
+          <div id="subread" class="subread">ready to warp</div>
+          <div id="morseLamp" class="morse-lamp hidden"></div>
+        </div>
+        <div class="controls" id="mainControls"></div>
+        <div class="presets" id="presetRow"></div>
+        <div class="modes" id="modeRow"></div>
+        <div id="twin" class="hidden" style="margin-top:12px;text-align:center">
+          Timer B: <b id="timerB">03:00</b>
+          <button class="ghost" id="btnStartB">Start B</button>
+          <button class="ghost" id="btnResetB">Reset B</button>
+        </div>
+        <div id="tabataHud" class="hud hidden"></div>
+      </section>
+
+      <aside class="side">
+        <div class="card">
+          <h2 id="worldTitle">World Clock Carousel</h2>
+          <div class="world" id="worldClocks"></div>
+        </div>
+        <div class="card">
+          <h2 id="alarmTitle">Alarm Sundial</h2>
+          <div class="row">
+            <input id="alarmTime" type="time" />
+            <button class="ghost" id="btnArm">Arm</button>
+          </div>
+          <div class="hud" id="alarmHud">unarmed</div>
+        </div>
+        <div class="card">
+          <h2 id="dateTitle">Date Horizon</h2>
+          <div class="row">
+            <input id="dateIn" type="date" />
+            <button class="ghost" id="btnHorizon">Lock</button>
+          </div>
+          <div class="hud" id="horizonHud">pick a future</div>
+        </div>
+        <div class="card">
+          <h2 id="lapTitle">Lap Chronicle</h2>
+          <div class="laps" id="laps">no laps yet</div>
+        </div>
+      </aside>
     </div>
-    <script>
-        let time = 300, interval;
-        function start() { interval = setInterval(() => { time--; update(); if(time <= 0) clearInterval(interval); }, 1000); }
-        function reset() { time = 300; update(); clearInterval(interval); }
-        function update() { document.getElementById('timer').textContent = String(Math.floor(time/60)).padStart(2,'0') + ':' + String(time%60).padStart(2,'0'); }
-    </script>
+
+    <section id="arcade">
+      <div class="row">
+        <h2 class="sec-title" id="arcadeTitle">Arcade Cabinet</h2>
+        <select id="gameSelect"></select>
+        <button id="btnPlayGame">Play</button>
+        <button class="ghost" id="btnCloseGame">Close</button>
+        <span class="hud" id="gameHud">choose a ridiculous sport</span>
+      </div>
+      <canvas id="gameCanvas" class="game hidden" width="640" height="360"></canvas>
+      <div id="gameBoard" class="hidden"></div>
+    </section>
+
+    <section id="studio">
+      <div class="row" id="studioHead"></div>
+      <div class="lyric" id="lyric">press a song — original karaoke lives here</div>
+      <div class="piano" id="piano"></div>
+      <div class="drums" id="drums"></div>
+      <div class="row" id="studioTools"></div>
+      <div id="theremin" class="hidden"></div>
+      <div class="grid16" id="seqGrid" title="Sequencer star grid"></div>
+      <canvas id="viz" class="vis" width="640" height="64"></canvas>
+      <div class="mixer card" style="margin-top:8px">
+        <h2>Chaos Volume Mixer</h2>
+        <label>SFX <input id="volSfx" type="range" min="0" max="100" value="80" /></label>
+        <label>Music <input id="volMusic" type="range" min="0" max="100" value="70" /></label>
+        <label>Ambience <input id="volAmb" type="range" min="0" max="100" value="40" /></label>
+        <label>Chronos <input id="volVoice" type="range" min="0" max="100" value="90" /></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <span>Melody Forge (16 steps, becomes your alarm):</span>
+        <div class="grid16" id="melodyGrid"></div>
+        <button class="ghost" id="btnPreviewMelody">Preview</button>
+      </div>
+    </section>
+
+    <section id="museum">
+      <div class="museum-head">
+        <h2 class="sec-title" id="museumTitle">Museum of 100 Wonders</h2>
+        <input id="museumSearch" placeholder="search wonders…" style="min-width:220px" />
+        <div class="filter-row row" id="filters"></div>
+      </div>
+      <p class="hud" id="museumCount"></p>
+      <div class="grid-features" id="featureGrid"></div>
+    </section>
+  </div>
+
+  <aside id="shopDrawer" class="shop-drawer" aria-label="Side Street Shop">
+    <div class="shop-head">
+      <h2 id="shopHead">Side Street Shop</h2>
+      <button class="ghost icon-btn" id="shopClose">Close</button>
+    </div>
+    <p class="shop-blurb">A kiosk on the curb. The timer stays the main event. Spend ticks you earn by finishing clocks and games.</p>
+    <p class="hud">Wallet: <b id="shopWallet">0</b> ticks</p>
+    <div id="shopItems" class="shop-items"></div>
+  </aside>
+
+  <div id="callOverlay" class="call-overlay hidden">
+    <div class="call-card">
+      <div id="callerArt"></div>
+      <div class="call-pulse"></div>
+      <h2 id="callerName">Incoming call</h2>
+      <p id="callerLine">TUNG TUNG TUNG SAHUR</p>
+      <div class="row call-actions">
+        <button class="lime" id="btnAcceptCall">Accept</button>
+        <button class="mag" id="btnDeclineCall">Decline</button>
+      </div>
+      <div id="callGame" class="hidden"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+  <div id="comboFloat"></div>
+
+  <script src="js/catalog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/visuals.js"></script>
+  <script src="js/games.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/insane.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
