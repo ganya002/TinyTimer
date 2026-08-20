@@ -158,8 +158,9 @@ const Engine = {
       this.render();
       if (!this.stopwatch && this.time <= 0) this.finish();
     }, step);
-    toast("Clock is live");
+    if (Progress && Progress.count()) toast("Clock is live");
     Badge.earn("start");
+    if (window.Events) Events.onStart();
   },
   pause() {
     if (!this.running) { this.start(); document.getElementById("subread").textContent = "resumed"; return; }
@@ -279,14 +280,9 @@ const Engine = {
     this.running = false; clearInterval(this.interval);
     this.time = 0; this.render();
     document.getElementById("btnStart").textContent = "Start";
-    Visuals.confetti(); Visuals.nova(); Visuals.shake();
-    AudioBus.fanfare();
-    Shop.add(5);
     Badge.earn("finish");
-    Chronos.speak("Time is up.");
-    if (Math.random() < 0.6) Boss.start();
-    else if (Math.random() < 0.5) Tung.call();
-    else Virus.storm(4);
+    if (window.Events) Events.onFinish();
+    else Shop.add(5);
     Dopamine.combo("+CLEAR", "#ffd23a");
   }
 };

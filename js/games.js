@@ -4,14 +4,19 @@ const Arcade = {
   boot() {
     this.canvas = document.getElementById("gameCanvas");
     this.ctx = this.canvas.getContext("2d");
-    const sel = document.getElementById("gameSelect");
-    CHAOS_FEATURES.filter((f) => f.cat === "game").forEach((f) => {
-      const o = document.createElement("option"); o.value = f.action; o.textContent = f.name; sel.appendChild(o);
-    });
+    this.refreshSelect();
     addEventListener("keydown", (e) => { this.keys[e.key] = true; if (this.game && this.game.key) this.game.key(e); });
     addEventListener("keyup", (e) => { this.keys[e.key] = false; });
     this.canvas.addEventListener("mousedown", (e) => this.game && this.game.click && this.game.click(this.mouse(e)));
     this.canvas.addEventListener("mousemove", (e) => this.game && this.game.move && this.game.move(this.mouse(e)));
+  },
+  refreshSelect() {
+    const sel = document.getElementById("gameSelect");
+    if (!sel) return;
+    sel.innerHTML = "";
+    CHAOS_FEATURES.filter((f) => f.cat === "game" && (!window.Progress || Progress.has(f.action))).forEach((f) => {
+      const o = document.createElement("option"); o.value = f.action; o.textContent = f.name; sel.appendChild(o);
+    });
   },
   mouse(e) {
     const r = this.canvas.getBoundingClientRect();
@@ -20,6 +25,7 @@ const Arcade = {
   launchSelected() { this.open(document.getElementById("gameSelect").value); },
   openPicker() { document.getElementById("arcade").scrollIntoView({ behavior: "smooth" }); toast("Arcade cabinet"); },
   open(id) {
+    if (window.Progress && !Progress.has(id)) { toast("still locked"); return; }
     this.close();
     this.running = true;
     this.score = 0;

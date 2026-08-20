@@ -355,12 +355,67 @@ body.spray-on #graffiti { pointer-events: auto; cursor: crosshair; z-index: 25; 
   background: var(--panel); border: 3px solid var(--orange); border-radius: 18px;
   padding: 12px; width: min(280px, 90vw); box-shadow: var(--shadow);
 }
-.feat .ico-wrap { margin-bottom: 4px; }
+.feat.is-locked { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.8); }
 .feat .ico-wrap svg { width: 2em; height: 2em; }
 
-body.spray-on::after {
-  content: "SPRAY MODE · drag to tag · Esc to holster";
-  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
-  background: var(--soot); color: var(--gold); padding: 6px 14px; border-radius: 999px;
-  z-index: 26; border: 1px solid var(--gold); font-size: 0.8rem; pointer-events: none;
+.locked-ui { display: none !important; }
+
+#eventBanner {
+  position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-20px);
+  background: #111827; color: #fff; padding: 10px 18px; border-radius: 8px;
+  z-index: 97; opacity: 0; pointer-events: none; font-size: 0.95rem;
+  transition: opacity 0.2s, transform 0.2s; max-width: min(520px, 90vw); text-align: center;
 }
+#eventBanner.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#unlockHud { color: var(--muted); font-size: 0.85rem; letter-spacing: 0.08em; }
+
+body.bland {
+  font-family: system-ui, sans-serif !important;
+  background: #1a1a2e !important;
+  color: #fff !important;
+  filter: none !important;
+}
+body.bland #fx, body.bland #fx-front { display: none; }
+body.bland #app {
+  max-width: none; min-height: 100vh; padding: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+body.bland header.top {
+  justify-content: center; margin: 0 0 8px; width: auto;
+}
+body.bland .brand h1 {
+  background: none; color: #fff; -webkit-text-fill-color: #fff;
+  letter-spacing: 0; text-transform: none; font-size: 1.25rem; font-weight: 600;
+}
+body.bland .brand small { display: none; }
+body.bland #brandMark { display: none; }
+body.bland .layout { display: block; }
+body.bland #stage {
+  background: transparent; border: 0; box-shadow: none; animation: none;
+  padding: 0; text-align: center;
+}
+body.bland .time-readout {
+  font-size: 5rem; font-weight: 400; letter-spacing: 0; text-shadow: none;
+}
+body.bland #mainControls {
+  justify-content: center;
+}
+body.bland #mainControls .ico-wrap { display: none; }
+body.bland #mainControls button {
+  font-size: 1.5rem; padding: 10px 30px; margin: 5px;
+  border-radius: 4px; background: #e8e8e8; color: #111; font-weight: 500;
+}
+body.bland #mainControls button.ghost,
+body.bland #mainControls button.gold { background: #e8e8e8; color: #111; border: 0; }
+body.bland .presets, body.bland .modes { display: none !important; }
+
+body.waking {
+  background: #1a1a2e !important;
+}
+body.waking #stage { animation: none; }
+body.waking .brand h1 {
+  background: none; color: #fff; -webkit-text-fill-color: #fff;
+  text-transform: none; letter-spacing: 0.04em;
+}
+
+body:not(.has-side) .layout { grid-template-columns: 1fr; }

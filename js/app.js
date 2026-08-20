@@ -24,7 +24,7 @@ const ACTIONS = {
   dateHorizon() { document.getElementById("dateIn").focus(); },
   milliMicroscope() { Engine.toggleMillis(); },
   lapChronicle() { Engine.lap(); },
-  keyboardNinja() { toast("Space start/pause · R reset · L lap · G graffiti · V virus · T sahur · N chaos"); },
+  keyboardNinja() { toast("Space start/pause · R reset · L lap · V virus · T sahur · N chaos"); },
   memoryVault() { Engine.preset(Engine.lastVault, "vault recall"); },
   flipClock() { Engine.setDisplay("flip"); },
   analogAura() { Engine.setDisplay("analog"); },
@@ -52,7 +52,7 @@ const ACTIONS = {
   glitchHex() { Visuals.glitch(); },
   crtHaunting() { Visuals.crt(); },
   fireflyGarden() { Visuals.fliesOn(); },
-  graffitiWall() { Graffiti.toggle(); },
+  luckyEncounter() { Events.fire({ guaranteed: true }); },
   gravityFlip() { Visuals.gravity(); },
   dvdGhost() { Visuals.dvdOn(); },
   virusStorm() { Virus.storm(5); },
@@ -115,7 +115,8 @@ const ACTIONS = {
 
 const Chaos = {
   dice() {
-    const pool = CHAOS_FEATURES.filter((f) => f.action !== "chaosDice");
+    const pool = CHAOS_FEATURES.filter((f) => f.action !== "chaosDice" && Progress.has(f.action));
+    if (!pool.length) { toast("nothing unlocked to roll yet"); return; }
     const f = pool[(Math.random()*pool.length)|0];
     toast("Chaos dice: " + f.name);
     launch(f.action);
@@ -124,6 +125,10 @@ const Chaos = {
 
 function launch(action) {
   AudioBus.resume();
+  if (!Progress.has(action)) {
+    toast("still locked");
+    return false;
+  }
   const fn = ACTIONS[action];
   if (!fn) { toast("missing action " + action); return false; }
   fn();
@@ -139,32 +144,31 @@ function buildChrome() {
   document.getElementById("btnDeclineCall").innerHTML = iconHTML("decline") + " Decline";
 
   document.getElementById("mainControls").innerHTML = `
-    <button id="btnStart">${iconHTML("play")} Start</button>
-    <button class="ghost" id="btnPause">${iconHTML("pause")} Pause</button>
-    <button class="ghost" id="btnReset">${iconHTML("reset")} Reset</button>
-    <button class="gold" id="btnLap">${iconHTML("flag")} Lap</button>
-    <input id="minIn" type="number" min="0" max="999" value="5" style="width:72px" aria-label="minutes" />
-    <span>:</span>
-    <input id="secIn" type="number" min="0" max="59" value="0" style="width:72px" aria-label="seconds" />
-    <button class="ghost" id="btnForge">${iconHTML("forge")} Forge</button>`;
+    <button id="btnStart">Start</button>
+    <button class="ghost locked-ui" id="btnPause" data-unlock="pauseResume">Pause</button>
+    <button class="ghost" id="btnReset">Reset</button>
+    <button class="gold locked-ui" id="btnLap" data-unlock="lapChronicle">Lap</button>
+    <input class="locked-ui" id="minIn" data-unlock="customTimeForge" type="number" min="0" max="999" value="5" style="width:72px" aria-label="minutes" />
+    <span class="locked-ui" data-unlock="customTimeForge">:</span>
+    <input class="locked-ui" id="secIn" data-unlock="customTimeForge" type="number" min="0" max="59" value="0" style="width:72px" aria-label="seconds" />
+    <button class="ghost locked-ui" id="btnForge" data-unlock="customTimeForge">Forge</button>`;
 
   document.getElementById("presetRow").innerHTML = [
-    [25*60,"pomodoro","tomato","25"],[5*60,"short break","tea","5"],[15*60,"long break","flame","15"],
-    [2*60,"green tea","tea","green"],[4*60,"black tea","tea","black"],[3*60,"oolong","tea","oolong"],
-    [5*60,"herbal","tea","herbal"],[6*60,"soft egg","egg","soft"],[8*60,"jammy egg","egg","jammy"],[12*60,"hard egg","egg","hard"]
-  ].map(([sec,name,ic,label]) => `<button class="ghost" data-sec="${sec}" data-name="${name}">${iconHTML(ic)} ${label}</button>`).join("");
+    [25*60,"pomodoro","tomato","25","pomodoroTrinity"],[5*60,"short break","tea","5","pomodoroTrinity"],[15*60,"long break","flame","15","pomodoroTrinity"],
+    [2*60,"green tea","tea","green","teaCeremony"],[4*60,"black tea","tea","black","teaCeremony"],[3*60,"oolong","tea","oolong","teaCeremony"],
+    [5*60,"herbal","tea","herbal","teaCeremony"],[6*60,"soft egg","egg","soft","eggLab"],[8*60,"jammy egg","egg","jammy","eggLab"],[12*60,"hard egg","egg","hard","eggLab"]
+  ].map(([sec,name,ic,label,need]) => `<button class="ghost locked-ui" data-unlock="${need}" data-sec="${sec}" data-name="${name}">${iconHTML(ic)} ${label}</button>`).join("");
 
   document.getElementById("modeRow").innerHTML = `
-    <button class="ghost" id="btnSw">${iconHTML("stopwatch")} Stopwatch</button>
-    <button class="ghost" id="btnTab">${iconHTML("flame")} Tabata</button>
-    <button class="ghost" id="btnMs">${iconHTML("scope")} ms</button>
-    <button class="ghost" id="btnTwin">${iconHTML("swords")} Twin Duel</button>
-    <button class="lime" id="btnChaos">${iconHTML("chaos")} Chaos Dice</button>
-    <button class="mag" id="btnArcade">${iconHTML("boss")} Arcade</button>
-    <button class="gold" id="btnStudio">${iconHTML("mic")} Studio</button>
-    <button class="ghost" id="btnSpray">${iconHTML("spray")} Spray</button>
-    <button class="ghost" id="btnVirus">${iconHTML("virus")} Popups</button>
-    <button class="ghost" id="btnTung">${iconHTML("tung")} Sahur</button>`;
+    <button class="ghost locked-ui" id="btnSw" data-unlock="stopwatchAscent">${iconHTML("stopwatch")} Stopwatch</button>
+    <button class="ghost locked-ui" id="btnTab" data-unlock="tabataInferno">${iconHTML("flame")} Tabata</button>
+    <button class="ghost locked-ui" id="btnMs" data-unlock="milliMicroscope">${iconHTML("scope")} ms</button>
+    <button class="ghost locked-ui" id="btnTwin" data-unlock="twinTimerDuel">${iconHTML("swords")} Twin Duel</button>
+    <button class="lime locked-ui" id="btnChaos" data-unlock="chaosDice">${iconHTML("chaos")} Chaos Dice</button>
+    <button class="mag locked-ui" id="btnArcade" data-unlock-cat="game">${iconHTML("boss")} Arcade</button>
+    <button class="gold locked-ui" id="btnStudio" data-unlock-cat="music">${iconHTML("mic")} Studio</button>
+    <button class="ghost locked-ui" id="btnVirus" data-unlock="virusStorm">${iconHTML("virus")} Popups</button>
+    <button class="ghost locked-ui" id="btnTung" data-unlock="tungCall">${iconHTML("tung")} Sahur</button>`;
 
   document.getElementById("worldTitle").innerHTML = iconHTML("globe") + " World Clock Carousel";
   document.getElementById("alarmTitle").innerHTML = iconHTML("alarm") + " Alarm Sundial";
@@ -197,6 +201,7 @@ function buildChrome() {
     <button class="ghost" id="btnLoop">${iconHTML("loop")} Loop Pedal</button>`;
 
   bindUi();
+  Progress.apply();
 }
 
 function bindUi() {
@@ -216,7 +221,6 @@ function bindUi() {
   document.getElementById("btnChaos").onclick = () => Chaos.dice();
   document.getElementById("btnArcade").onclick = () => Arcade.openPicker();
   document.getElementById("btnStudio").onclick = () => Studio.open();
-  document.getElementById("btnSpray").onclick = () => Graffiti.toggle();
   document.getElementById("btnVirus").onclick = () => Virus.storm(5);
   document.getElementById("btnTung").onclick = () => Tung.call(Tung.callers[0]);
   document.getElementById("btnStartB").onclick = () => Engine.startB();
@@ -252,15 +256,18 @@ function buildMuseum() {
   let cat = "all", q = "";
   function draw() {
     const list = CHAOS_FEATURES.filter((f) => (cat==="all"||f.cat===cat) && (f.name+" "+f.blurb).toLowerCase().includes(q));
-    document.getElementById("museumCount").textContent = list.length + " wonders on display";
-    document.getElementById("featureGrid").innerHTML = list.map((f) => `
-      <button class="feat" data-action="${f.action}">
-        ${iconHTML(f.icon)}
+    const open = list.filter((f) => Progress.has(f.action)).length;
+    document.getElementById("museumCount").textContent = open + " / " + list.length + " wonders unlocked in this filter";
+    document.getElementById("featureGrid").innerHTML = list.map((f) => {
+      const on = Progress.has(f.action);
+      return `<button class="feat ${on ? "" : "is-locked"}" data-action="${f.action}" ${on ? "" : "disabled"}>
+        ${on ? iconHTML(f.icon) : iconHTML("vault")}
         <div class="id">#${String(f.id).padStart(3,"0")}</div>
-        <h3>${f.name}</h3>
-        <p>${f.blurb}</p>
+        <h3>${on ? f.name : "Locked"}</h3>
+        <p>${on ? f.blurb : "Keep playing. Random events peel this open."}</p>
         <span class="cat">${f.cat}</span>
-      </button>`).join("");
+      </button>`;
+    }).join("");
   }
   document.getElementById("filters").onclick = (e) => {
     const b = e.target.closest("button"); if (!b) return;
@@ -283,13 +290,12 @@ function keys() {
     if (Studio.jinglesOn && "12345678".includes(e.key)) {
       AudioBus.tone(330 * Math.pow(2, (Number(e.key)-1)/12), 0.2, "sine", "sfx", 0.12);
     }
-    if (e.code === "Space") { e.preventDefault(); Engine.pause(); }
+    if (e.code === "Space") { e.preventDefault(); if (Progress.has("pauseResume")) Engine.pause(); else Engine.start(); }
     if (e.key === "r" || e.key === "R") Engine.reset();
-    if (e.key === "l" || e.key === "L") Engine.lap();
-    if (e.key === "g" || e.key === "G") Graffiti.toggle();
-    if (e.key === "v" || e.key === "V") Virus.storm(3);
-    if (e.key === "t" || e.key === "T") Tung.call(Tung.callers[0]);
-    if (e.key === "n" || e.key === "N") Chaos.dice();
+    if ((e.key === "l" || e.key === "L") && Progress.has("lapChronicle")) Engine.lap();
+    if ((e.key === "v" || e.key === "V") && Progress.has("virusStorm")) Virus.storm(3);
+    if ((e.key === "t" || e.key === "T") && Progress.has("tungCall")) Tung.call(Tung.callers[0]);
+    if ((e.key === "n" || e.key === "N") && Progress.has("chaosDice")) Chaos.dice();
   });
 }
 
@@ -299,6 +305,7 @@ window.ACTIONS = ACTIONS;
 window.toast = toast;
 window.closeModal = closeModal;
 window.modal = modal;
+window.buildMuseum = buildMuseum;
 
 window.verifyChaos = function () {
   const ids = CHAOS_FEATURES.map((f) => f.id);
@@ -318,19 +325,20 @@ window.verifyChaos = function () {
 
 document.addEventListener("DOMContentLoaded", () => {
   buildChrome();
+  Progress.boot();
   Engine.boot();
   Visuals.boot();
   Arcade.boot();
   Studio.boot();
   Shop.boot();
-  Graffiti.boot();
   Ember.boot();
   Badge.render();
   Streak.boot();
-  Brainrot.boot();
+  Events.boot();
   buildMuseum();
   keys();
-  setInterval(() => Studio.drawViz(), 80);
+  Progress.apply();
+  setInterval(() => { if (Progress.has("oscilloscope")) Studio.drawViz(); }, 80);
   const v = window.verifyChaos();
   console.info("TinyTimer Chaos verify", v);
 });

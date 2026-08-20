@@ -43,10 +43,10 @@ window.CHAOS_FEATURES = [
   { id: 39, cat: "visual",  icon: "glitch", name: "Glitch Hex", blurb: "RGB split, tear lines, cursed compression artifacts.", action: "glitchHex" },
   { id: 40, cat: "visual",  icon: "crt", name: "CRT Haunting", blurb: "Scanlines, curvature, and a ghost in the shell of 1987.", action: "crtHaunting" },
   { id: 41, cat: "visual",  icon: "firefly", name: "Firefly Garden", blurb: "Bioluminescent bugs orbit the timer like tiny lanterns.", action: "fireflyGarden" },
-  { id: 42, cat: "visual",  icon: "spray", name: "Graffiti Spray Wall", blurb: "Spray-paint the stage. Tags, drips, and a gold cap if you shop.", action: "graffitiWall" },
+  { id: 42, cat: "visual",  icon: "star", name: "Lucky Encounter", blurb: "Nudge fate: a random event fires and may unlock something new.", action: "luckyEncounter" },
   { id: 43, cat: "visual",  icon: "flipg", name: "Gravity Flip", blurb: "UI elements fall upward because physics filed for divorce.", action: "gravityFlip" },
   { id: 44, cat: "visual",  icon: "dvd", name: "DVD Ghost Logo", blurb: "A bouncing logo hunts the perfect corner forever.", action: "dvdGhost" },
-  { id: 45, cat: "visual",  icon: "virus", name: "Virus Popup Storm", blurb: "Fake malware windows you must close or POST onto the graffiti wall.", action: "virusStorm" },
+  { id: 45, cat: "visual",  icon: "virus", name: "Virus Popup Storm", blurb: "Fake malware windows you must close or POST for spare ticks.", action: "virusStorm" },
 
   { id: 46, cat: "game",    icon: "snake", name: "Neon Snake", blurb: "Eat glowing pellets. Do not become a pretzel.", action: "gameSnake" },
   { id: 47, cat: "game",    icon: "brick", name: "Brick Drop", blurb: "Tetris-lite: stack tetrominoes before the ceiling judges you.", action: "gameBrickDrop" },

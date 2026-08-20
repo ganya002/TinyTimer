@@ -51,7 +51,7 @@ Source of truth: `js/catalog.js`. Each row is a distinct, launchable feature.
 39. Glitch Hex
 40. CRT Haunting
 41. Firefly Garden
-42. Graffiti Spray Wall
+42. Lucky Encounter
 43. Gravity Flip
 44. DVD Ghost Logo
 45. Virus Popup Storm

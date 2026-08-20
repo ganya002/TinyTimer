@@ -1,24 +1,28 @@
 # TinyTimer Chaos Edition
 
-A fork of TinyTimer that keeps the countdown at the center of the page, then rings it with 100 distinct wonders: arcade games, original songs, graffiti, fake virus popups, a side-street shop, and a Tung Tung Tung Sahur incoming call.
+First visit looks like the original TinyTimer: a bland countdown, Start, and Reset. Nothing else is unlocked.
 
-Open `index.html` in a browser. No build step. No emoji. Every icon is original vector sticker art (soot outlines, magma fills).
+Play the clock. Random events fire while it runs (and when it hits zero). Each event unlocks more wonders until all 100 are loose.
 
-## The main event
+Open `index.html` in a browser. No build step. No emoji. Every icon is original vector sticker art.
 
-The timer is still the stage. Start, pause, forge a duration, use tea/egg/pomodoro presets.
+## How progression works
+
+- **0 unlocked** — original look. Navy background, giant 05:00, Start / Reset.
+- **Start the timer** — after a couple of seconds the first random event peels something open (Pause, a preset, a visual, a game…).
+- **Keep playing** — events keep rolling. The fire-street skin, arcade, studio, shop, popups, and Sahur calls only appear after you unlock them.
+- Progress is saved in the browser (`tt-unlocks`). A new visitor always starts empty.
 
 ## Side pieces (not the homepage)
 
-- **Side Street Shop** — a curb kiosk. Spend ticks earned from finishing timers and games. Cosmetics and snacks. It never replaces the clock.
-- **Graffiti spray wall** — drag to tag. Virus windows have a **POST** button that stamps their title onto the wall.
-- **Virus popup storm** — fake 90s malware you close or POST. Parody only.
-- **Tung Tung Tung Sahur call** — he can ring you. Accept and tap the chant, or decline and live with it.
-- **Brainrot ambush** — random callers and tap mini-games jump the page while you wait.
+- **Side Street Shop** — curb kiosk. Spend ticks. Never the main event. Unlocks late.
+- **Virus popup storm** — fake 90s malware you close or POST for ticks.
+- **Tung Tung Tung Sahur call** — he rings you once that wonder is unlocked.
+- **Brainrot ambush** — random mini-games after it unlocks.
 
 ## 100 wonders
 
-See [FEATURES.md](FEATURES.md). Launch any of them from the Museum of 100 Wonders at the bottom.
+See [FEATURES.md](FEATURES.md). The museum lists locked slots as Locked until events open them.
 
 ## Songs (original)
 
@@ -31,5 +35,3 @@ See [FEATURES.md](FEATURES.md). Launch any of them from the Museum of 100 Wonder
 ```bash
 node scripts/verify-features.js
 ```
-
-Checks that there are exactly 100 unique features, every action is wired, every icon exists, and source files contain no emoji.
