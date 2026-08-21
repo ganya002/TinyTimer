@@ -11,6 +11,7 @@ const MiniGames = {
   raf: 0,
   last: 0,
   running: false,
+  paused: false,
   keys: Object.create(null),
   pointer: { x: 0, y: 0, down: false, inside: false },
   scores: {},
@@ -40,19 +41,32 @@ const MiniGames = {
     addEventListener("resize", () => this.resize());
   },
 
+  formField(el) {
+    const tag = (el && el.tagName) || "";
+    return tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || (el && el.isContentEditable);
+  },
   bind() {
     const onKey = (e, down) => {
+      if (this.formField(e.target) || document.body.classList.contains("overlay-open")) {
+        if (!down) this.keys[e.key] = false;
+        return;
+      }
       this.keys[e.key] = down;
-      if (!this.running || !this.game) return;
+      if (!this.running || this.paused || !this.game) return;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
-        const tag = (e.target && e.target.tagName) || "";
-        if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
         e.preventDefault();
       }
       if (down && this.game.key) this.game.key(e);
     };
     addEventListener("keydown", (e) => onKey(e, true));
     addEventListener("keyup", (e) => onKey(e, false));
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) this.paused = true;
+      else if (!document.body.classList.contains("overlay-open")) {
+        this.paused = false;
+        this.last = 0;
+      }
+    });
 
     const pos = (e) => {
       const r = this.canvas.getBoundingClientRect();
@@ -77,8 +91,12 @@ const MiniGames = {
       pos(e);
       if (this.game && this.game.pointer) this.game.pointer("up");
     });
-    this.canvas.addEventListener("pointerleave", () => { this.pointer.inside = false; });
+    this.canvas.addEventListener("pointerleave", () => {
+      if (!this.pointer.down) this.pointer.inside = false;
+    });
   },
+  suspend() { this.paused = true; },
+  resume() { this.paused = false; this.last = 0; },
 
   renderTabs() {
     this.tabs.innerHTML = "";
@@ -135,6 +153,11 @@ const MiniGames = {
 
   loop(ts) {
     if (!this.running || !this.game) return;
+    if (this.paused) {
+      this.last = 0;
+      this.raf = requestAnimationFrame((t) => this.loop(t));
+      return;
+    }
     const dt = this.last ? Math.min(0.05, (ts - this.last) / 1000) : 0;
     this.last = ts;
     if (this.game.update) this.game.update(dt);
@@ -181,7 +204,7 @@ const Games = {
     function spawnDrop(w) {
       const gold = Math.random() < 0.12;
       drops.push({
-        x: 16 + Math.random() * (w - 32),
+        x: host.testX != null ? host.testX : 16 + Math.random() * (w - 32),
         y: -18,
         r: gold ? 8 : 6 + Math.random() * 3,
         vy: 90 + Math.random() * 50,
@@ -203,6 +226,7 @@ const Games = {
         splashes.length = 0;
         host.setHud("Score 0  ·  Lives 3  ·  Best " + best());
       },
+      pointer(kind) { if (kind === "down" && over) host.restart(); },
       update(dt) {
         if (over) return;
         const { w, h } = host.size;
@@ -325,13 +349,12 @@ const Games = {
     const best = () => host.scores.snake || 0;
 
     function placeFood() {
-      let x, y, hits;
-      do {
-        x = (Math.random() * cols) | 0;
-        y = (Math.random() * rows) | 0;
-        hits = body.some((p) => p.x === x && p.y === y);
-      } while (hits);
-      food = { x, y };
+      for (let n = 0; n < cols * rows; n++) {
+        const x = (Math.random() * cols) | 0;
+        const y = (Math.random() * rows) | 0;
+        if (!body.some((p) => p.x === x && p.y === y)) { food = { x, y }; return; }
+      }
+      food = { x: body[0].x, y: body[0].y };
     }
 
     return {
@@ -348,6 +371,7 @@ const Games = {
         placeFood();
         host.setHud("Length " + body.length + "  ·  Best " + best());
       },
+      pointer(kind) { if (kind === "down" && dead) host.restart(); },
       key(e) {
         const map = {
           ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
@@ -432,6 +456,7 @@ const Games = {
         serveBall(Math.random() < 0.5 ? -1 : 1);
         host.setHud("You 0  ·  CPU 0  ·  first to 5");
       },
+      pointer(kind) { if (kind === "down" && over) host.restart(); },
       update(dt) {
         if (over) return;
         const { w, h } = host.size;
@@ -554,6 +579,7 @@ const Games = {
 
     function flip(btn, card) {
       if (lock || btn.classList.contains("on") || btn.classList.contains("got")) return;
+      if (first && first.btn === btn) return;
       btn.classList.add("on");
       btn.setAttribute("aria-label", "Tile " + card.shape);
       if (!first) { first = { btn, card }; return; }

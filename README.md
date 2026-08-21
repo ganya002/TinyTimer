@@ -1,15 +1,16 @@
 # TinyTimer
 
-A simple countdown timer. Open `index.html` in a browser.
+A countdown timer. Open `index.html` in a browser — no build step.
 
-The clock is the original TinyTimer: navy background, giant time, Start and Reset. Click the minutes or seconds to type a new time, or pick a duration from the dropdown. Reset returns to the time you set.
+The clock is still the original TinyTimer: navy (until you portal elsewhere), giant time, Start and Reset. Type a new time, use the dropdown, or craft a +1 Minute.
 
-On the side are five minigames that actually run:
+## Around the clock
 
-- **Drop** — catch falling drops with the bucket (mouse, touch, or arrows)
-- **Snake** — eat, grow, stay on the grid
-- **Pong** — paddle vs CPU, first to 5
-- **Memory** — match every pair
-- **Reflex** — wait for green, then click
+- **Lucky blocks** spawn on the page. The cursor becomes a pickaxe; click/tap to break them. Loot goes into your pack.
+- **Craft** a table, pickaxes, a portal, a World Crystal, extra minutes, or a team banner.
+- **Portal** restyles the whole site. Import palettes from GitHub, Wikipedia, YouTube, and other sites, or roll a random one.
+- **World** is a small Terraria-style map: dig, jump, mine ore, fight slimes. Keyboard on desktop, on-screen pad on phones.
+- **Teams** let you save custom colors and members, then apply them.
+- **Minigames** on the side: Drop, Snake, Pong, Memory, Reflex.
 
-High scores stay in this browser.
+Progress is stored in this browser. The layout stacks on phones so the timer, games, and dock all stay usable.

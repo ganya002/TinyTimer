@@ -17,5 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
     tabs: document.getElementById("gameTabs")
   });
 
+  Workshop.boot({
+    dock: document.querySelector(".dock"),
+    sheet: document.getElementById("sheet"),
+    sheetBody: document.getElementById("sheetBody"),
+    sheetClose: document.getElementById("sheetClose"),
+    luckyLayer: document.getElementById("luckyLayer"),
+    chips: document.getElementById("packChips"),
+    toast: document.getElementById("toast")
+  });
+
   document.getElementById("restart").addEventListener("click", () => MiniGames.restart());
 });

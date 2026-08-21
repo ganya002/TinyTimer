@@ -3,18 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a1a2e" />
   <title>TinyTimer</title>
   <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/workshop.css" />
 </head>
 <body>
+  <div id="luckyLayer" aria-hidden="true"></div>
+  <div class="pack-chips" id="packChips"></div>
+
   <main class="hero">
     <h1 class="sr-only">TinyTimer</h1>
     <div class="time" role="group" aria-label="Countdown">
       <label class="sr-only" for="minutes">Minutes</label>
-      <input id="minutes" type="text" inputmode="numeric" maxlength="2" value="05" aria-live="off" />
+      <input id="minutes" type="text" inputmode="numeric" maxlength="2" value="05" autocomplete="off" />
       <span aria-hidden="true">:</span>
       <label class="sr-only" for="seconds">Seconds</label>
-      <input id="seconds" type="text" inputmode="numeric" maxlength="2" value="00" aria-live="off" />
+      <input id="seconds" type="text" inputmode="numeric" maxlength="2" value="00" autocomplete="off" />
     </div>
     <div class="controls">
       <button type="button" id="start">Start</button>
@@ -47,8 +52,42 @@
     <p class="hint" id="gameHint"></p>
   </aside>
 
+  <nav class="dock" aria-label="Workshop">
+    <button type="button" data-panel="craft">Craft</button>
+    <button type="button" data-panel="portal">Portal</button>
+    <button type="button" data-panel="world">World</button>
+    <button type="button" data-panel="teams">Teams</button>
+  </nav>
+
+  <section class="sheet hidden" id="sheet" aria-label="Workshop panel">
+    <div class="sheet-head">
+      <h2 id="sheetTitle">Workshop</h2>
+      <button type="button" id="sheetClose">Close</button>
+    </div>
+    <div id="sheetBody"></div>
+  </section>
+
+  <div class="terra-wrap hidden" id="terraWrap">
+    <div class="terra-bar">
+      <span id="terraHud">World</span>
+      <button type="button" id="terraClose">Leave world</button>
+    </div>
+    <canvas id="terraCanvas" aria-label="Terraria world"></canvas>
+    <div id="terraPad">
+      <div class="pad-move">
+        <button type="button" data-pad="left">Left</button>
+        <button type="button" data-pad="right">Right</button>
+      </div>
+      <button type="button" data-pad="jump">Jump</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
   <script src="js/timer.js"></script>
   <script src="js/games.js"></script>
+  <script src="js/workshop.js"></script>
+  <script src="js/terraria.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
