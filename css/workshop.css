@@ -1,0 +1,316 @@
+.pack-chips {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: min(420px, calc(100vw - 24px));
+  z-index: 12;
+  pointer-events: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+
+.chip i {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.chip.dim { opacity: 0.7; }
+
+.dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+  background: var(--panel);
+  border-top: 1px solid var(--stroke);
+  z-index: 30;
+}
+
+.dock button {
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 8px 14px;
+  min-height: 44px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+}
+
+.dock button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+#luckyLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.lucky {
+  pointer-events: auto;
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  border: 3px solid #8a5a12;
+  background:
+    linear-gradient(#0000 46%, #c48a16 46% 54%, #0000 54%),
+    linear-gradient(90deg, #0000 46%, #c48a16 46% 54%, #0000 54%),
+    #f0c43a;
+  box-shadow: inset 0 0 0 3px #ffe58a, 4px 4px 0 #0006;
+  image-rendering: pixelated;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='14' y='12' width='4' height='16' rx='1' fill='%238a5a32'/%3E%3Cpath d='M6 8h20l-4 9H10z' fill='%23c8cde8'/%3E%3C/svg%3E") 6 8, pointer;
+}
+
+.lucky-q {
+  font: 800 1.6rem/56px ui-monospace, monospace;
+  color: #6a3d08;
+}
+
+.lucky-crack {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lucky[data-hits="1"] .lucky-crack {
+  background: linear-gradient(115deg, transparent 48%, #3a2a10 48% 50%, transparent 50%);
+}
+.lucky[data-hits="2"] .lucky-crack {
+  background:
+    linear-gradient(115deg, transparent 48%, #3a2a10 48% 50%, transparent 50%),
+    linear-gradient(20deg, transparent 40%, #3a2a10 40% 42%, transparent 42%);
+}
+.lucky[data-hits="3"] .lucky-crack {
+  background:
+    linear-gradient(115deg, transparent 48%, #3a2a10 48% 50%, transparent 50%),
+    linear-gradient(20deg, transparent 40%, #3a2a10 40% 42%, transparent 42%),
+    linear-gradient(-30deg, transparent 60%, #3a2a10 60% 62%, transparent 62%);
+}
+
+.lucky.swing { animation: pickSwing 0.12s ease; }
+.lucky.break { animation: luckyBreak 0.18s ease forwards; }
+
+@keyframes pickSwing {
+  50% { transform: rotate(-12deg) scale(0.96); }
+}
+@keyframes luckyBreak {
+  to { transform: scale(0.2) rotate(20deg); opacity: 0; }
+}
+
+.sheet {
+  position: fixed;
+  z-index: 40;
+  right: 16px;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  width: min(440px, calc(100vw - 24px));
+  max-height: min(70vh, 560px);
+  overflow: auto;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 16px 40px #0005;
+}
+
+.sheet.hidden,
+.terra-wrap.hidden,
+.toast:not(.show) { display: none; }
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sheet-head h2 { margin: 0; font-size: 1rem; }
+
+.sheet-head button,
+.recipes button,
+.theme-card,
+.row-actions button,
+.team-row button,
+.team-form button,
+#terraClose,
+#terraPad button {
+  font-size: 0.85rem;
+  margin: 0;
+  padding: 8px 12px;
+  min-height: 40px;
+}
+
+.recipes {
+  display: grid;
+  gap: 8px;
+}
+
+.recipe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  opacity: 0.55;
+}
+
+.recipe.ok { opacity: 1; border-color: var(--accent); }
+
+.recipe span { font-size: 0.75rem; color: var(--muted); }
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.theme-card {
+  background: var(--swatch, var(--bg));
+  color: var(--ink);
+  border: 2px solid var(--acc, var(--stroke));
+  border-radius: 8px;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.team-form {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.team-form input[type="text"],
+.team-form input:not([type="color"]) {
+  font: inherit;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--stroke);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.team-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 16px;
+  transform: translateX(-50%);
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  padding: 8px 14px;
+  z-index: 50;
+  font-size: 0.85rem;
+}
+
+.terra-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.terra-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--panel);
+  color: var(--ink);
+}
+
+#terraCanvas {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  touch-action: none;
+  display: block;
+}
+
+#terraPad {
+  display: none;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+  background: var(--panel);
+}
+
+#terraPad .pad-move { display: flex; gap: 8px; }
+
+@media (max-width: 920px) {
+  .pack-chips {
+    position: static;
+    max-width: 100%;
+    padding: 0 4px;
+    justify-content: center;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sheet {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (pointer: coarse) {
+  #terraPad { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lucky.swing, .lucky.break { animation: none; }
+}

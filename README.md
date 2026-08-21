@@ -1,37 +1,16 @@
-# TinyTimer Chaos Edition
+# TinyTimer
 
-First visit looks like the original TinyTimer: a bland countdown, Start, and Reset. Nothing else is unlocked.
+A countdown timer. Open `index.html` in a browser — no build step.
 
-Play the clock. Random events fire while it runs (and when it hits zero). Each event unlocks more wonders until all 100 are loose.
+The clock is still the original TinyTimer: navy (until you portal elsewhere), giant time, Start and Reset. Type a new time, use the dropdown, or craft a +1 Minute.
 
-Open `index.html` in a browser. No build step. No emoji. Every icon is original vector sticker art.
+## Around the clock
 
-## How progression works
+- **Lucky blocks** spawn on the page. The cursor becomes a pickaxe; click/tap to break them. Loot goes into your pack.
+- **Craft** a table, pickaxes, a portal, a World Crystal, extra minutes, or a team banner.
+- **Portal** restyles the whole site. Import palettes from GitHub, Wikipedia, YouTube, and other sites, or roll a random one.
+- **World** is a small Terraria-style map: dig, jump, mine ore, fight slimes. Keyboard on desktop, on-screen pad on phones.
+- **Teams** let you save custom colors and members, then apply them.
+- **Minigames** on the side: Drop, Snake, Pong, Memory, Reflex.
 
-- **0 unlocked** — original look. Navy background, giant 05:00, Start / Reset.
-- **Start the timer** — after a couple of seconds the first random event peels something open (Pause, a preset, a visual, a game…).
-- **Keep playing** — events keep rolling. Sahur calls, virus windows, cookie banners, fake updates, captchas, news tickers, and more jump you. There is no button to start them.
-- Progress is saved in the browser (`tt-unlocks`). A new visitor always starts empty.
-
-## Side pieces (not the homepage)
-
-- **Side Street Shop** — curb kiosk. Spend ticks. Never the main event. Unlocks late.
-- **Virus popup storm** — fake 90s malware you close or POST for ticks.
-- **Tung Tung Tung Sahur call** — he rings you once that wonder is unlocked.
-- **Brainrot ambush** — random mini-games after it unlocks.
-
-## 100 wonders
-
-See [FEATURES.md](FEATURES.md). The museum lists locked slots as Locked until events open them.
-
-## Songs (original)
-
-- Tick Tock Forever
-- Five More Minutes
-- Pomodoro Power
-
-## Verify
-
-```bash
-node scripts/verify-features.js
-```
+Progress is stored in this browser. The layout stacks on phones so the timer, games, and dock all stay usable.
